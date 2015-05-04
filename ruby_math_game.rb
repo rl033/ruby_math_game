@@ -3,6 +3,7 @@ require 'colorize'
 def initialize_game
   @player1_life = 3
   @player2_life = 3
+  @type = 1
   @turn = 1
   @round = 1
 end
@@ -10,16 +11,37 @@ end
 def gen_questions(player)
   @num1 = rand(20) + 1
   @num2 = rand(20) + 1
-  return "Player #{player}: What does #{@num1} plus #{@num2} equal?"
+  @type = rand(3) + 1
+  
+  case @type
+  when 1
+    op = "plus"
+  when 2
+    op = "minus"
+  when 3
+    op = "times"
+  else
+    op = ""
+  end
+  return "Player #{player}, what does #{@num1} #{op} #{@num2} equal?"
 end
 
 def verify_answer(answer)
-  result = @num1 + @num2
+  case @type
+  when 1
+    result = @num1 + @num2
+  when 2
+    result = @num1 - @num2
+  when 3
+    result = @num1 * @num2
+  else
+    result = 0
+  end
   return answer.to_i == result ? true : false
 end
 
 def prompt_player_for_answer(player)
-  puts "Player #{player}: What's you answer?"
+  puts "Player #{player}, what's you answer?"
   gets.chomp
 end
 
