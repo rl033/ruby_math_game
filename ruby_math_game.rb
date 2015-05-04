@@ -1,10 +1,14 @@
 require 'colorize'
 
 def initialize_game
-  @player1_name = ""
-  @player2_name = ""
+  if @restart.nil?
+    @player1_name = ""
+    @player2_name = ""
+  end
   @player1_life = 3
   @player2_life = 3
+  @player1_score = 0
+  @player2_score = 0
   @type = 1
   @turn = 1
   @count = 0
@@ -74,13 +78,13 @@ def game_restart?(player_response)
 end
 
 def update_status(result)
-  unless result
-    case @turn
-    when 1
-      @player1_life -= 1
-    when 2
-      @player2_life -= 1
-    end
+  case @turn
+  when 1
+    @player1_score += 1 if result
+    @player1_life -= 1 if !result
+  when 2
+    @player2_score += 1 if result
+    @player2_life -= 1 if !result
   end
   @count += 1
 end
@@ -104,6 +108,9 @@ def display_status
     puts "\nThe game is over!"
     puts "#{@player1_name} won!" if @player2_life == 0
     puts "#{@player2_name} won!" if @player1_life == 0
+    puts "Final score"
+    puts "#{@player1_name}: #{@player1_score}"
+    puts "#{@player2_name}: #{@player2_score}"
   end
   puts ""
 end
@@ -113,7 +120,7 @@ puts "Ruby Math Game"
 while(!@end)
   initialize_game if @restart
   puts "Round #{@round}".blue if @count == 0
-  prompt_player_for_name if @round == 1
+  prompt_player_for_name if @round == 1 && (@player1_name.empty? || @player2_name.empty?)
   puts gen_questions
   answer = prompt_player_for_answer
   result = verify_answer(answer) 
