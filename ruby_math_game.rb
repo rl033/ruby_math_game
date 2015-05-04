@@ -1,3 +1,5 @@
+require 'colorize'
+
 def initialize_game
   @player1_life = 3
   @player2_life = 3
@@ -35,7 +37,7 @@ def update_status(player)
 end
 
 def display_result(result) 
-  puts result ? "You got this question right!" : "You answer is wrong."
+  puts result ? "You got this question right!".green : "You answer is wrong.".red
 end
 
 def display_status
