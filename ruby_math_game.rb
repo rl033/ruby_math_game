@@ -9,6 +9,8 @@ def initialize_game
   @turn = 1
   @count = 0
   @round = 1
+  @end = false
+  @restart = false
 end
 
 def gen_questions
@@ -55,8 +57,20 @@ def prompt_player_for_answer
   gets.chomp
 end
 
+def prompt_player_for_restart
+  puts "\nWant to play again?"
+  gets.chomp.downcase
+end
+
 def game_end?
-  return @player1_life == 0 || @player2_life == 0 ? true : false
+  @end = @player1_life == 0 || @player2_life == 0 ? true : false
+end
+
+def game_restart?(player_response)
+  if player_response.include? "yes"
+    @end = false
+    @restart = true
+  end
 end
 
 def update_status(result)
@@ -96,7 +110,8 @@ end
 
 initialize_game
 puts "Ruby Math Game"
-while(!game_end?)
+while(!@end)
+  initialize_game if @restart
   puts "Round #{@round}".blue if @count == 0
   prompt_player_for_name if @round == 1
   puts gen_questions
@@ -106,4 +121,5 @@ while(!game_end?)
   update_status(result)
   display_status if @count == 2 || result == false
   turn_manager
+  game_restart?(prompt_player_for_restart) if game_end?
 end
